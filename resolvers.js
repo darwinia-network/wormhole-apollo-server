@@ -5,7 +5,9 @@ const FormatTimestamp = function(timestamp) {
 const BurnRecordEntityTos2sRecords = function(burnRecord) {
     return {
         id: burnRecord.id,
-        direction: "crab2darwinia",
+        fromChain: "crab",
+        toChain: "darwinia",
+        bridge: "helix",
         laneId: burnRecord.lane_id,
         nonce: burnRecord.nonce,
         requestTxHash: burnRecord.request_transaction,
@@ -23,12 +25,14 @@ const BurnRecordEntityTos2sRecords = function(burnRecord) {
 const S2sEventTos2sRecords = function(s2sEvent) {
     return {
         id: s2sEvent.id,
-        direction: "darwinia2crab",
+        fromChain: "darwinia",
+        toChain: "crab",
+        bridge: "helix",
         laneId: s2sEvent.laneId,
         nonce: s2sEvent.nonce,
         requestTxHash: s2sEvent.requestTxHash,
         responseTxHash: s2sEvent.responseTxHash,
-        sender: s2sEvent.sender,
+        sender: s2sEvent.senderId,
         recipient: s2sEvent.recipient,
         token: s2sEvent.token,
         amount: s2sEvent.amount,

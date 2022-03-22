@@ -33,7 +33,9 @@ const typeDefs = gql`
 
   type S2sRecord {
     id: ID!
-    direction: String!
+    fromChain: String!
+    toChain: String!
+    bridge: String!
     laneId: String!
     nonce: String!
     requestTxHash: String!

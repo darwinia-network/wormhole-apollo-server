@@ -24,7 +24,7 @@ class Darwinia2CrabBacking extends RESTDataSource {
     //filter: {startTimestamp: {lessThan: \"${date}\"}}
     async lockRecordEntities(first, filter) {
         return this.post(`sq/darwinia-network/wormhole-darwinia`, {
-            query: `query { s2sEvents (first: ${first}, orderBy: NONCE_DESC, ${filter}) {nodes{id, laneId, nonce, amount, startTimestamp, endTimestamp, requestTxHash, responseTxHash, result, token, sender, recipient}}}`,
+            query: `query { s2sEvents (first: ${first}, orderBy: NONCE_DESC, ${filter}) {nodes{id, laneId, nonce, amount, startTimestamp, endTimestamp, requestTxHash, responseTxHash, result, token, senderId, recipient}}}`,
             variables:null
         });
     }

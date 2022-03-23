@@ -13,6 +13,13 @@ class Darwinia2CrabMappingTokenFactory extends RESTDataSource {
             variables:null
         });
     }
+
+    async dailyStatistics(filter) {
+        return this.post(`Sub2SubMappingTokenFactory`, {
+            query: `query { burnDailyStatistics (orderBy: id, orderDirection: desc, ${filter}) {id, dailyVolume, dailyCount}}`,
+            variables:null
+        });
+    }
 }
 
 class Darwinia2CrabBacking extends RESTDataSource {
@@ -25,6 +32,14 @@ class Darwinia2CrabBacking extends RESTDataSource {
     async lockRecordEntities(first, filter) {
         return this.post(`sq/darwinia-network/wormhole-darwinia`, {
             query: `query { s2sEvents (first: ${first}, orderBy: NONCE_DESC, ${filter}) {nodes{id, laneId, nonce, amount, startTimestamp, endTimestamp, requestTxHash, responseTxHash, result, token, senderId, recipient}}}`,
+            variables:null
+        });
+    }
+
+    //https://api.subquery.network/sq/darwinia-network/wormhole-darwinia__ZGFyd
+    async dailyStatistics(filter) {
+        return this.post(`sq/darwinia-network/wormhole-darwinia`, {
+            query: `query { s2sDailyStatistics (orderBy: ID_DESC, ${filter}) {nodes{id, dailyVolume, dailyCount}}}`,
             variables:null
         });
     }

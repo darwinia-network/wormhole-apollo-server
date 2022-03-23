@@ -1,6 +1,8 @@
 const { gql } = require('apollo-server');
 
 const typeDefs = gql`
+  scalar BigInt
+
   type BurnRecordEntity {
     id: ID!
     lane_id: String! # bytes
@@ -49,6 +51,12 @@ const typeDefs = gql`
     result: Int!
   }
 
+  type DailyStatistic {
+    id: ID!
+    dailyVolume: BigInt
+    dailyCount: Int
+  }
+
   type BurnRecordEntity_filter {
     start_timestamp_lt: Int
   }
@@ -57,6 +65,7 @@ const typeDefs = gql`
     burnRecordEntities(first: Int, start_timestamp: Int, sender: String, recipient: String): [BurnRecordEntity]
     lockRecordEntities(first: Int, start_timestamp: Int, sender: String, recipient: String): [S2sEvent]
     s2sRecords(first: Int, start_timestamp: Int, sender: String): [S2sRecord]
+    dailyStatistics(first: Int, timepast: Int): [DailyStatistic]
   }
 `;
 

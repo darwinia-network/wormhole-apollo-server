@@ -1,3 +1,5 @@
+const BigInt = require("apollo-type-bigint");
+
 const FormatTimestamp = function(timestamp) {
     return new Date(timestamp * 1000).toISOString().slice(0, 19);
 }
@@ -43,6 +45,7 @@ const S2sEventTos2sRecords = function(s2sEvent) {
 }
 
 const resolvers = {
+  BigInt: new BigInt.default("bigInt"),
   Query: {
       burnRecordEntities: async (_, { first, start_timestamp, sender, recipient }, { dataSources }) => {
           var filter = `start_timestamp_lt: ${start_timestamp}`;
@@ -103,6 +106,55 @@ const resolvers = {
               }
           }
           return s2sRecordList;
+      },
+      // TODO store volumes for different asset and use price oracle to transform into dollar value
+      dailyStatistics: async (_, { first, timepast }, { dataSources }) => {
+          const now = Date.now()/1000;
+          const timelimit = Math.floor(now - timepast);
+          var filterBurnDaily = `where: {id_gte: ${timelimit}}`;
+          var filterLockDaily = `filter: {id: {greaterThanOrEqualTo: \"${timelimit}\"}}`;
+          var s2sBurnDaily = await dataSources.darwinia2CrabMappingTokenFactory.dailyStatistics(filterBurnDaily);
+          var s2sLockDaily = await dataSources.darwinia2CrabBacking.dailyStatistics(filterLockDaily);
+
+          var left = s2sBurnDaily.data.burnDailyStatistics;
+          var right = s2sLockDaily.data.s2sDailyStatistics.nodes;
+          var records = [];
+          var lastRecord;
+          while (left.length && right.length) {
+              const record = left[0].id >= right[0].id ? left.shift() : right.shift();
+              if (!lastRecord) {
+                  lastRecord = record;
+                  continue;
+              }
+              console.log(lastRecord.id, record.id);
+              if (lastRecord.id == record.id) {
+                  lastRecord.dailyVolume = global.BigInt(lastRecord.dailyVolume) + global.BigInt(record.dailyVolume);
+                  lastRecord.dailyCount += record.dailyCount;
+                  continue;
+              } else {
+                  records.push(lastRecord);
+                  lastRecord = record;
+              }
+              if (first && records.length >= first) {
+                  return records;
+              }
+          }
+          var more = left.length > 0 ? left : right;
+          if (lastRecord && more.length > 0) {
+              if (lastRecord.id == more[0].id) {
+                  more[0].dailyVolume = global.BigInt(more[0].dailyVolume) + global.BigInt(lastRecord.dailyVolume);
+                  more[0].dailyCount += lastRecord.dailyCount;
+              } else {
+                  records.push(lastRecord);
+              }
+          }
+          for (var idx in more) {
+              records.push(more[idx]);
+              if (first && records.length >= first) {
+                  return records;
+              }
+          }
+          return records;
       },
   },
 };

@@ -133,11 +133,22 @@ const resolvers = {
     },
 
     // TODO store volumes for different asset and use price oracle to transform into dollar value
-    dailyStatistics: async (_, { first, timepast }, { dataSources }) => {
+    dailyStatistics: async (_, { first, timepast, chain }, { dataSources }) => {
       const now = Date.now() / 1000;
       const timelimit = Math.floor(now - timepast);
       const filterBurnDaily = `where: {id_gte: ${timelimit}}`;
       const filterLockDaily = `filter: {id: {greaterThanOrEqualTo: \"${timelimit}\"}}`;
+
+      if (chain === 'darwinia') {
+        const dailyStatistics = await dataSources.darwinia2CrabMappingTokenFactory.dailyStatistics(filterBurnDaily);
+
+        return dailyStatistics.data.burnDailyStatistics;
+      } else if (chain === 'crab') {
+        const dailyStatistics = await dataSources.darwinia2CrabBacking.dailyStatistics(filterLockDaily);
+
+        return dailyStatistics.data.s2sDailyStatistics.nodes;
+      }
+
       const s2sBurnDaily = await dataSources.darwinia2CrabMappingTokenFactory.dailyStatistics(filterBurnDaily);
       const s2sLockDaily = await dataSources.darwinia2CrabBacking.dailyStatistics(filterLockDaily);
       const left = s2sBurnDaily.data.burnDailyStatistics;

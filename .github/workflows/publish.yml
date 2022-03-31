@@ -66,3 +66,4 @@ jobs:
           tags: 
             - 'quay.io/darwinia-network/wormhole-apollo-server:sha-${{ steps.short-sha.outputs.sha }}'
 
+

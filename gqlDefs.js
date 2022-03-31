@@ -65,7 +65,7 @@ const typeDefs = gql`
     burnRecordEntities(first: Int, start_timestamp: Int, sender: String, recipient: String): [BurnRecordEntity]
     lockRecordEntities(first: Int, start_timestamp: Int, sender: String, recipient: String): [S2sEvent]
     s2sRecords(first: Int, start_timestamp: Int, sender: String): [S2sRecord]
-    dailyStatistics(first: Int, timepast: Int): [DailyStatistic]
+    dailyStatistics(first: Int, timepast: Int, chain: String): [DailyStatistic]
   }
 `;
 

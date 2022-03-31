@@ -63,7 +63,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: 
-            - 'quay.io/darwinia-network/wormhole-apollo-server:sha-${{ steps.short-sha.outputs.sha }}'
+          tags: |
+            'quay.io/darwinia-network/wormhole-apollo-server:sha-${{ steps.short-sha.outputs.sha }}'
 
 

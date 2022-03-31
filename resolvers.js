@@ -4,45 +4,45 @@ const FormatTimestamp = function (timestamp) {
   return new Date(timestamp * 1000).toISOString().slice(0, 19);
 };
 
-const BurnRecordEntityTos2sRecords = function (burnRecord) {
-  return {
-    id: burnRecord.id,
-    fromChain: 'crab',
-    toChain: 'darwinia',
-    bridge: 'helix',
-    laneId: burnRecord.lane_id,
-    nonce: burnRecord.nonce,
-    requestTxHash: burnRecord.request_transaction,
-    responseTxHash: burnRecord.response_transaction,
-    sender: burnRecord.sender,
-    recipient: burnRecord.recipient,
-    token: burnRecord.token,
-    amount: burnRecord.amount,
-    startTime: FormatTimestamp(burnRecord.start_timestamp),
-    endTime: FormatTimestamp(burnRecord.end_timestamp),
-    result: burnRecord.result,
-  };
-};
+const burnRecordEntityTos2sRecords = (burnRecord) => ({
+  id: burnRecord.id,
+  fromChain: 'crab',
+  fromChainMode: 'dvm',
+  toChain: 'darwinia',
+  toChainMode: 'native',
+  bridge: 'helix',
+  laneId: burnRecord.lane_id,
+  nonce: burnRecord.nonce,
+  requestTxHash: burnRecord.request_transaction,
+  responseTxHash: burnRecord.response_transaction,
+  sender: burnRecord.sender,
+  recipient: burnRecord.recipient,
+  token: burnRecord.token,
+  amount: burnRecord.amount,
+  startTime: FormatTimestamp(burnRecord.start_timestamp),
+  endTime: FormatTimestamp(burnRecord.end_timestamp),
+  result: burnRecord.result,
+});
 
-const S2sEventTos2sRecords = function (s2sEvent) {
-  return {
-    id: s2sEvent.id,
-    fromChain: 'darwinia',
-    toChain: 'crab',
-    bridge: 'helix',
-    laneId: s2sEvent.laneId,
-    nonce: s2sEvent.nonce,
-    requestTxHash: s2sEvent.requestTxHash,
-    responseTxHash: s2sEvent.responseTxHash,
-    sender: s2sEvent.senderId,
-    recipient: s2sEvent.recipient,
-    token: s2sEvent.token,
-    amount: s2sEvent.amount,
-    startTime: s2sEvent.startTimestamp,
-    endTime: s2sEvent.endTimestamp,
-    result: s2sEvent.result,
-  };
-};
+const s2sEventTos2sRecords = (s2sEvent) => ({
+  id: s2sEvent.id,
+  fromChain: 'darwinia',
+  fromChainMode: 'native',
+  toChain: 'crab',
+  toChainMode: 'dvm',
+  bridge: 'helix',
+  laneId: s2sEvent.laneId,
+  nonce: s2sEvent.nonce,
+  requestTxHash: s2sEvent.requestTxHash,
+  responseTxHash: s2sEvent.responseTxHash,
+  sender: s2sEvent.senderId,
+  recipient: s2sEvent.recipient,
+  token: s2sEvent.token,
+  amount: s2sEvent.amount,
+  startTime: s2sEvent.startTimestamp,
+  endTime: s2sEvent.endTimestamp,
+  result: s2sEvent.result,
+});
 
 const resolvers = {
   BigInt: new BigInt.default('bigInt'),
@@ -106,8 +106,8 @@ const resolvers = {
       while (left.length && right.length) {
         const record =
           FormatTimestamp(left[0].start_timestamp) >= right[0].startTimestamp
-            ? BurnRecordEntityTos2sRecords(left.shift())
-            : S2sEventTos2sRecords(right.shift());
+            ? burnRecordEntityTos2sRecords(left.shift())
+            : s2sEventTos2sRecords(right.shift());
 
         s2sRecordList.push(record);
 
@@ -117,7 +117,7 @@ const resolvers = {
       }
 
       const more = left.length > 0 ? left : right;
-      const convert = left.length > 0 ? BurnRecordEntityTos2sRecords : S2sEventTos2sRecords;
+      const convert = left.length > 0 ? burnRecordEntityTos2sRecords : s2sEventTos2sRecords;
 
       for (let idx in more) {
         if (Object.prototype.hasOwnProperty.call(more, idx)) {
@@ -177,7 +177,7 @@ const resolvers = {
           records.push(lastRecord);
         }
       }
-      
+
       for (let idx in more) {
         if (Object.prototype.hasOwnProperty.call(more, idx)) {
           records.push(more[idx]);

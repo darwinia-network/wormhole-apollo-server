@@ -4,9 +4,7 @@ const isProd = process.env.NODE_ENV === 'prod';
 class Darwinia2CrabMappingTokenFactory extends RESTDataSource {
   constructor() {
     super();
-    this.baseURL = isProd
-      ? 'https://crab-thegraph.darwinia.network/subgraphs/name/wormhole/'
-      : 'https://crab-thegraph-temp.darwinia.network/subgraphs/name/wormhole/';
+    this.baseURL = 'https://crab-thegraph.darwinia.network/subgraphs/name/wormhole/';
   }
 
   // filter = where: {start_timestamp_lt: ${start_timestamp}}

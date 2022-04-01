@@ -1,8 +1,6 @@
 const BigInt = require('apollo-type-bigint');
 
-const FormatTimestamp = function (timestamp) {
-  return new Date(timestamp * 1000).toISOString().slice(0, 19);
-};
+const formatTimestamp =  (timestamp) => new Date(timestamp * 1000).toISOString().slice(0, 19);
 
 const burnRecordEntityTos2sRecords = (burnRecord) => ({
   id: burnRecord.id,
@@ -19,8 +17,8 @@ const burnRecordEntityTos2sRecords = (burnRecord) => ({
   recipient: burnRecord.recipient,
   token: burnRecord.token,
   amount: burnRecord.amount,
-  startTime: FormatTimestamp(burnRecord.start_timestamp),
-  endTime: FormatTimestamp(burnRecord.end_timestamp),
+  startTime: formatTimestamp(burnRecord.start_timestamp),
+  endTime: formatTimestamp(burnRecord.end_timestamp),
   result: burnRecord.result,
 });
 
@@ -66,7 +64,7 @@ const resolvers = {
     },
 
     lockRecordEntities: async (_, { first, start_timestamp, sender, recipient }, { dataSources }) => {
-      const date = FormatTimestamp(start_timestamp);
+      const date = formatTimestamp(start_timestamp);
       let filter = `startTimestamp: {lessThan: \"${date}\"}`;
 
       if (sender) {
@@ -85,7 +83,7 @@ const resolvers = {
     },
 
     s2sRecords: async (_, { first, start_timestamp, sender }, { dataSources }) => {
-      const date = FormatTimestamp(start_timestamp);
+      const date = formatTimestamp(start_timestamp);
       let filterBurn = `start_timestamp_lt: ${start_timestamp}`;
       let filterLock = `startTimestamp: {lessThan: \"${date}\"}`;
 
@@ -105,7 +103,7 @@ const resolvers = {
 
       while (left.length && right.length) {
         const record =
-          FormatTimestamp(left[0].start_timestamp) >= right[0].startTimestamp
+          formatTimestamp(left[0].start_timestamp) >= right[0].startTimestamp
             ? burnRecordEntityTos2sRecords(left.shift())
             : s2sEventTos2sRecords(right.shift());
 

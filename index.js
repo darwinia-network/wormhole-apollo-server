@@ -1,12 +1,14 @@
 const { ApolloServer } = require('apollo-server');
-const DataSource = require("./dataSource.js");
-const typeDefs = require("./gqlDefs.js");
-const resolvers = require("./resolvers.js");
+const dataSource = require('./dataSource.js');
+const typeDefs = require('./gqlDefs.js');
+const resolvers = require('./resolvers.js');
 
-const server = new ApolloServer({ typeDefs, resolvers,
-    dataSources: () => {
-        return DataSource;
-    }
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  dataSources: () => {
+    return dataSource;
+  },
 });
 
 // The `listen` method launches a web server.

@@ -36,7 +36,9 @@ const typeDefs = gql`
   type S2sRecord {
     id: ID!
     fromChain: String!
+    fromChainMode: String!
     toChain: String!
+    toChainMode: String!
     bridge: String!
     laneId: String!
     nonce: String!
@@ -69,4 +71,4 @@ const typeDefs = gql`
   }
 `;
 
-module.exports = typeDefs
+module.exports = typeDefs;

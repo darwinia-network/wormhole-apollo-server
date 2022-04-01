@@ -89,7 +89,7 @@ const resolvers = {
 
       if (sender) {
         filterBurn = `${filterBurn}, sender: \"${sender}\"`;
-        filterLock = `${filterLock}, sender: {equalTo: \"${sender}\"}`;
+        filterLock = `${filterLock}, senderId: {equalTo: \"${sender}\"}`;
       }
 
       filterBurn = `where: { ${filterBurn} }`;

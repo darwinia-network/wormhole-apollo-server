@@ -26,14 +26,12 @@ class Darwinia2CrabMappingTokenFactory extends RESTDataSource {
 class Darwinia2CrabBacking extends RESTDataSource {
   constructor() {
     super();
-    this.baseURL = isProd
-      ? 'https://api.subquery.network/sq/darwinia-network/wormhole-darwinia/'
-      : 'https://api.subquery.network/sq/darwinia-network/wormhole-darwinia__ZGFyd';
+    this.baseURL = 'https://api.subquery.network/sq/darwinia-network/';
   }
 
   //filter: {startTimestamp: {lessThan: \"${date}\"}}
   async lockRecordEntities(first, filter) {
-    return this.post(`sq/darwinia-network/wormhole-darwinia`, {
+    return this.post(`wormhole-darwinia`, {
       query: `query { s2sEvents (first: ${first}, orderBy: NONCE_DESC, ${filter}) {nodes{id, laneId, nonce, amount, startTimestamp, endTimestamp, requestTxHash, responseTxHash, result, token, senderId, recipient}}}`,
       variables: null,
     });
@@ -41,7 +39,7 @@ class Darwinia2CrabBacking extends RESTDataSource {
 
   //https://api.subquery.network/sq/darwinia-network/wormhole-darwinia__ZGFyd
   async dailyStatistics(filter) {
-    return this.post(`sq/darwinia-network/wormhole-darwinia`, {
+    return this.post(`wormhole-darwinia`, {
       query: `query { s2sDailyStatistics (orderBy: ID_DESC, ${filter}) {nodes{id, dailyVolume, dailyCount}}}`,
       variables: null,
     });

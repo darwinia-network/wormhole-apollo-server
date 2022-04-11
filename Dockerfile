@@ -6,4 +6,4 @@ WORKDIR /opt/wormhole-apollo-server
 
 EXPOSE 4000
 
-CMD [ "yarn", "serve" ]
+CMD [ "yarn", "start" ]

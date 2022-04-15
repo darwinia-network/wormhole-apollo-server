@@ -20,6 +20,7 @@ const burnRecordEntityTos2sRecords = (burnRecord) => ({
   startTime: formatTimestamp(burnRecord.start_timestamp),
   endTime: formatTimestamp(burnRecord.end_timestamp),
   result: burnRecord.result,
+  fee: burnRecord.fee,
 });
 
 const s2sEventTos2sRecords = (s2sEvent) => ({
@@ -40,6 +41,7 @@ const s2sEventTos2sRecords = (s2sEvent) => ({
   startTime: s2sEvent.startTimestamp,
   endTime: s2sEvent.endTimestamp,
   result: s2sEvent.result,
+  fee: s2sEvent.fee,
 });
 
 const resolvers = {
@@ -92,6 +94,9 @@ const resolvers = {
         filterLock = `${filterLock}, senderId: {equalTo: \"${sender}\"}`;
       }
 
+      /**
+       * subql filter: { or: [ { sender: { equalTo: $sender}}, { recipient: { equalTo: $recipient }}]}
+       */
       filterBurn = `where: { ${filterBurn} }`;
       filterLock = `filter: { ${filterLock} }`;
 

@@ -16,6 +16,7 @@ const typeDefs = gql`
     start_timestamp: Int!
     end_timestamp: Int
     result: Int
+    fee: Int
   }
 
   type S2sEvent {
@@ -31,6 +32,7 @@ const typeDefs = gql`
     amount: String!
     startTimestamp: String!
     endTimestamp: String
+    fee: String!
   }
 
   type S2sRecord {
@@ -51,6 +53,7 @@ const typeDefs = gql`
     startTime: String!
     endTime: String
     result: Int!
+    fee: String!
   }
 
   type DailyStatistic {
